@@ -20,6 +20,8 @@ install-dev-tools \
 lint \
 precommit \
 publish \
+release \
+release-check \
 test \
 uninstall \
 version \
@@ -44,6 +46,8 @@ help:
 	@echo "  make lint                  - Run flake8 lint checks"
 	@echo "  make precommit             - Run pre-commit hooks on all files"
 	@echo "  make publish               - Publish package to PyPI"
+	@echo "  make release               - Perform a release using semantic-release"
+	@echo "  make release-check         - Check the current release version"
 	@echo "  make test                  - Run tests with pytest"
 	@echo "  make uninstall             - Uninstall package"
 	@echo "  make version               - Show current version"
@@ -165,3 +169,14 @@ vulture: install-dev-tools
 	@echo ""
 	@echo "🪶 Running Vulture dead code analysis..."
 	vulture src --min-confidence 80 --exclude tests,venv,build,dist
+
+# -----------------------------------------------------------
+# Python Semantic Release
+# -----------------------------------------------------------
+
+release:
+	make clean
+	semantic-release publish
+
+release-check:
+	semantic-release version --print

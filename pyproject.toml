@@ -50,7 +50,9 @@ dev = [
     "flynt>=1.0.1",
     "pydocstyle>=6.3.0",
     "darglint>=1.8.1",
-    "mypy>=1.12.1"
+    "mypy>=1.12.1",
+    "python-semantic-release>=10.5.2",
+
 ]
 
 [tool.setuptools]
@@ -180,3 +182,23 @@ strictness = "short"
 ignore_regex = "(^test_)"
 message_template = "{path}:{line}: {msg_id} {msg}"
 
+# -----------------------------------------------------------
+# Python Semantic Release
+# -----------------------------------------------------------
+[tool.semantic_release]
+version_source = "file"
+version_file = ".version"
+version_variables = [
+    "src/jps_yaml_schema_validator/__init__.py:__version__",
+]
+version_toml = [
+    "pyproject.toml:project.version",
+]
+
+upload_to_repository = false
+upload_to_release = true
+commit_message = "chore(release): bump version to v{version}"
+branch = "main"
+changelog_file = "CHANGELOG.md"
+build_command = "python -m build"
+commit_parser = "conventional"
