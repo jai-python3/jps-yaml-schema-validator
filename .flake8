@@ -1,0 +1,19 @@
+[flake8]
+max-line-length = 120
+extend-ignore =
+    # E203: Black disagrees with slice whitespace rules[](https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#slices)
+    E203,
+    # W503: Black prefers line breaks before binary operators (opposite of PEP 8 legacy recommendation)
+    W503,
+    # W292: Black intentionally removes trailing newline at EOF — non-configurable
+    W292
+exclude =
+    .git,
+    __pycache__,
+    build,
+    dist,
+    venv,
+    .venv,
+    .tox,
+    .pytest_cache,
+    docs

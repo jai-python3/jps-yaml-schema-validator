@@ -1,0 +1,103 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Build, Test, and Publish to PyPI
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: 🧾 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensure tags are available
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: ⚙️ Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e '.[dev]' build twine requests pytest pytest-cov
+
+      - name: 🧪 Run tests with coverage
+        run: |
+          pytest -v --disable-warnings \
+            --cov=src/jps_cookiecutter_utils \
+            --cov-report=term-missing \
+            --cov-report=xml
+
+      - name: 📤 Upload coverage to Codecov
+        if: success()
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          flags: unittests
+          fail_ci_if_error: false
+          verbose: true
+
+      - name: 🏷️ Get version from pyproject.toml
+        id: version
+        run: |
+          VERSION=$(python -c "import tomllib, pathlib; data=tomllib.loads(pathlib.Path('pyproject.toml').read_text()); print(data['project']['version'])")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Detected version: $VERSION"
+
+      - name: ✅ Validate tag matches project version
+        run: |
+          TAG=${GITHUB_REF_NAME}
+          VERSION=${{ steps.version.outputs.version }}
+          if [ "$TAG" != "v$VERSION" ]; then
+            echo "❌ Tag ($TAG) does not match pyproject.toml version ($VERSION)"
+            exit 1
+          fi
+          echo "✅ Tag matches project version ($TAG)"
+
+      - name: 🔎 Check if version already exists on PyPI
+        id: check
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          echo "📦 Checking if version ${VERSION} exists on PyPI..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://pypi.org/pypi/jps-cookiecutter-utils/${VERSION}/json || true)
+          if [ "$STATUS" = "200" ]; then
+            echo "✅ Version ${VERSION} already exists on PyPI. Skipping upload."
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "🆕 Version ${VERSION} not found on PyPI. Proceeding with upload."
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🧰 Build distribution
+        run: |
+          echo "🔧 Building package distributions..."
+          make build || python -m build
+
+      - name: 🚀 Publish to PyPI
+        if: steps.check.outputs.skip == 'false'
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          echo "🚀 Uploading distribution to PyPI..."
+          twine upload dist/*
+
+      - name: 📦 Upload built artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: dist/*

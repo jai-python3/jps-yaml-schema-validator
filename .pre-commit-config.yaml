@@ -1,0 +1,104 @@
+repos:
+  # --- Autoflake: remove unused imports & variables ---
+  - repo: git@github.com:PyCQA/autoflake.git
+    rev: v2.3.1
+    hooks:
+      - id: autoflake
+        args:
+          [
+            "--in-place",
+            "--remove-all-unused-imports",
+            "--remove-unused-variables",
+            "--ignore-init-module-imports",
+            "--recursive",
+          ]
+
+  # --- isort: sort imports consistently ---
+  - repo: git@github.com:PyCQA/isort.git
+    rev: 7.0.0
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+
+  # --- Black: format code ---
+  - repo: git@github.com:psf/black.git
+    rev: 25.9.0
+    hooks:
+      - id: black
+
+  # --- Flake8: linting ---
+  - repo: git@github.com:PyCQA/flake8.git
+    rev: 7.3.0
+    hooks:
+      - id: flake8
+
+  # --- Markdownlint: auto-fix and validate Markdown files ---
+  - repo: git@github.com:DavidAnson/markdownlint-cli2.git
+    rev: v0.18.1
+    hooks:
+      - id: markdownlint-cli2
+        name: "Markdownlint (fix + check)"
+        args: ["--fix", "--config=.markdownlint.yaml"]
+        files: \.(md|markdown)$
+
+  # --- Flynt: enforce f-strings ---
+  - repo: git@github.com:ikamensh/flynt.git
+    rev: 1.0.6
+    hooks:
+      - id: flynt
+        name: "Flynt (convert to f-strings)"
+        args: ["--fail-on-change", "--line-length", "100"]
+        files: \.py$
+
+  # --- Vulture: detect dead code ---
+  - repo: git@github.com:jendrikseipp/vulture.git
+    rev: v2.14
+    hooks:
+      - id: vulture
+        name: "Vulture (dead code detection)"
+        args:
+          [
+            "--min-confidence", "80",
+            "--exclude", "tests,venv,build,dist",
+            "--ignore-decorators", "app.command",
+            "--make-whitelist", ".vulture-ignore",
+            "src"
+          ]
+
+
+  # --- Bandit: security linter ---
+  - repo: git@github.com:PyCQA/bandit.git
+    rev: 1.8.6
+    hooks:
+      - id: bandit
+        name: "Bandit (security scan)"
+        args: ["-c", "pyproject.toml", "-r", "src"]
+
+  # --- mypy: static typing ---
+  - repo: git@github.com:pre-commit/mirrors-mypy.git
+    rev: v1.18.2
+    hooks:
+      - id: mypy
+        name: "Mypy (type checking)"
+        args: ["--config-file=pyproject.toml"]
+        exclude: ^tests/
+        additional_dependencies:
+          - types-PyYAML
+          - types-requests
+
+  # --- pydocstyle: enforce docstring convention ---
+  - repo: git@github.com:PyCQA/pydocstyle.git
+    rev: 6.3.0
+    hooks:
+      - id: pydocstyle
+        name: "Pydocstyle (Google-style docstrings)"
+        args: ["--convention=google"]
+        files: ^src/
+
+  # --- darglint: ensure docstrings match function signatures ---
+  - repo: git@github.com:terrencepreilly/darglint.git
+    rev: v1.8.1
+    hooks:
+      - id: darglint
+        name: "Darglint (docstring parameter validation)"
+        args: ["--docstring-style=google"]

@@ -1,0 +1,8 @@
+# .markdownlint.yaml
+MD013:
+  line_length: 150
+  heading_line_length: 120
+  code_block_line_length: 0  # ignore long lines in code blocks
+  tables: false               # ignore tables if desired
+MD029:
+  style: ordered

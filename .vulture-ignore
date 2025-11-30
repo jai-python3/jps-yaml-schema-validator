@@ -1,0 +1,6 @@
+# Whitelisted symbols that Vulture may incorrectly flag as unused.
+# These are used dynamically (e.g., via Typer CLI).
+
+APP_NAME
+iter_copied_paths
+main
