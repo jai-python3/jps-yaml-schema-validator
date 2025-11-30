@@ -1,0 +1,65 @@
+# rules.yaml
+# Comprehensive example schema exercising all validation features
+
+# Metadata field – validator ignores keys beginning with "_"
+_schema_version: "1.0.0"
+
+reference_genome:
+  type: file
+  required: true
+  must_exist: true
+  must_be_readable: true
+  non_empty: true
+  extensions: [".fa", ".fasta"]
+
+targets_directory:
+  type: directory
+  required: true
+  must_exist: true
+  must_be_absolute: false
+
+depth_metric:
+  type: enum
+  required: true
+  allowed: ["median", "trimmed_mean", "MAD"]
+
+sample_id:
+  type: string
+  required: true
+  min_length: 3
+  max_length: 16
+  regex: "^[A-Za-z0-9_\\-]+$"
+
+replicates:
+  type: int
+  required: true
+  min: 1
+  max: 10
+
+alpha_value:
+  type: float
+  required: true
+  min: 0.0
+  max: 1.0
+
+enable_qc:
+  type: bool
+  required: true
+
+gene_blacklist:
+  type: list
+  required: true
+  min_items: 1
+  max_items: 5
+  element_type: string
+
+qc_thresholds:
+  type: list
+  required: true
+  element_type: float
+  min_items: 2
+  max_items: 4
+
+notes:
+  type: string
+  required: false

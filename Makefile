@@ -129,7 +129,7 @@ test:
 	@echo ""
 	@echo "🧪 Running pytest with coverage..."
 	pytest -v --disable-warnings \
-	  --cov=src/scripts \
+	  --cov=src/jps_yaml_schema_validator \
 	  --cov-report=term-missing \
 	  --cov-report=xml \
 	  --cov-config=.coveragerc \

@@ -10,7 +10,7 @@ readme = "README.md"
 authors = [{ name = "Jaideep Sundaram", email = "jai.python3@gmail.com" }]
 license = { text = "MIT" }
 requires-python = ">=3.10"
-keywords = ["cookiecutter", "bootstrap", "project-generator", "automation"]
+keywords = ["yaml-schema-validator", "bootstrap", "project-generator", "automation"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -18,7 +18,11 @@ classifiers = [
 ]
 
 dependencies = [
-    "typer>=0.12.3"
+    "PyYAML==6.0.2",
+    "rich==13.9.2",
+    "ruamel.yaml==0.18.6",
+    "typer==0.12.4",
+    "click==8.1.7",
 ]
 
 [project.urls]
@@ -27,10 +31,9 @@ Repository = "https://github.com/jai-python3/jps-yaml-schema-validator"
 Issues = "https://github.com/jai-python3/jps-yaml-schema-validator/issues"
 
 [project.scripts]
-jps-bootstrap = "scripts.bootstrap:app"
+jps-yaml-schema-validate = "jps_yaml_schema_validator.cli:main"
 
 [project.optional-dependencies]
-test = ["pytest>=8.0.0"]
 dev = [
     "flake8>=7.0.0",
     "black>=24.0.0",

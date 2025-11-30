@@ -36,7 +36,7 @@ jobs:
       - name: 🧪 Run tests with coverage
         run: |
           pytest -v --disable-warnings \
-            --cov=src/jps_cookiecutter_utils \
+            --cov=src/jps_yaml-schema-validator_utils \
             --cov-report=term-missing \
             --cov-report=xml
 
@@ -72,7 +72,7 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           echo "📦 Checking if version ${VERSION} exists on PyPI..."
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://pypi.org/pypi/jps-cookiecutter-utils/${VERSION}/json || true)
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://pypi.org/pypi/jps-yaml-schema-validator-utils/${VERSION}/json || true)
           if [ "$STATUS" = "200" ]; then
             echo "✅ Version ${VERSION} already exists on PyPI. Skipping upload."
             echo "skip=true" >> $GITHUB_OUTPUT

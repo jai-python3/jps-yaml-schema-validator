@@ -1,0 +1,17 @@
+# config.yaml
+# Valid example configuration that should pass all checks
+
+reference_genome: /tmp/hg38.fa
+targets_directory: /tmp/targets
+depth_metric: median
+sample_id: SAMPLE_01
+replicates: 3
+alpha_value: 0.05
+enable_qc: true
+gene_blacklist:
+  - CYP2D6
+  - CYP2C19
+qc_thresholds:
+  - 0.1
+  - 0.5
+notes: "Optional note field."
