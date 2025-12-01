@@ -231,12 +231,6 @@ filename = "src/jps_yaml_schema_validator/__init__.py"   # change if your packag
 search = '__version__ = "{current_version}"'
 replace = '__version__ = "{new_version}"'
 
-[bumpversion.hooks]
-pre_commit = [
-  "git-changelog",                     # updates CHANGELOG.md
-  "git add CHANGELOG.md",
-]
-
 [tool.git-changelog]
 template = "keepachangelog"   # produces beautiful Keep a Changelog format
 output = "CHANGELOG.md"
