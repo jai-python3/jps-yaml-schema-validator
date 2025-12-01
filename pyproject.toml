@@ -211,6 +211,12 @@ commit_parser = "conventional"
 # -----------------------------------------------------------
 [tool.bumpversion]
 current_version = "1.0.1"   # optional but nice to have in one place
+commit = true
+tag = true
+tag_name = "v{new_version}"
+message = "chore(release): bump version to v{new_version}"
+hooks = ["pre_commit"]
+
 
 [[tool.bumpversion.files]]
 filename = ".version"                     # plain text file with just the version
