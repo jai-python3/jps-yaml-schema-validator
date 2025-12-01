@@ -226,10 +226,9 @@ search = '__version__ = "{current_version}"'
 replace = '__version__ = "{new_version}"'
 
 [tool.bumpversion.hooks]
-post_bump = [
+pre_commit = [
   "git-changelog",                     # updates CHANGELOG.md
   "git add CHANGELOG.md",
-  "git commit --amend --no-edit"       # folds changelog into the bump commit
 ]
 
 [tool.git-changelog]
