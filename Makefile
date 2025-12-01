@@ -6,11 +6,24 @@ PIP := pip
 CURRENT_VERSION := $(shell grep -m1 '^version =' pyproject.toml | sed 's/.*"\(.*\)".*/\1/')
 DRYRUN ?= 0
 
+# Docker image settings
+REGISTRY    := ghcr.io
+USERNAME    := jai-python3
+IMAGE_NAME  := jps-yaml-schema-validator
+IMAGE_TAG   ?= latest
+FULL_IMAGE  := $(REGISTRY)/$(USERNAME)/$(IMAGE_NAME):$(IMAGE_TAG)
 
+# -----------------------------------------------------------
+# Phony targets
+# -----------------------------------------------------------
 .PHONY: build \
 check-build \
 clean \
-creat-venv \
+create-venv \
+docker-build \
+docker-login \
+docker-push \
+docker-release \
 fix \
 format \
 help \
@@ -37,6 +50,10 @@ help:
 	@echo "  make check-build           - Check built distributions"
 	@echo "  make clean                 - Remove build artifacts and caches"
 	@echo "  make create-venv           - Create a virtual environment"
+	@echo "  make docker-build          - Build Docker image"
+	@echo "  make docker-login          - Login to Docker registry"
+	@echo "  make docker-push           - Push Docker image to registry"
+	@echo "  make docker-release        - Build and push Docker image"
 	@echo "  make fix                   - Auto-fix code issues"
 	@echo "  make format                - Format code with black"
 	@echo "  make help                  - Show this help message"
@@ -180,3 +197,20 @@ release:
 
 release-check:
 	semantic-release version --print
+
+# -----------------------------------------------------------
+# Docker
+# -----------------------------------------------------------
+
+docker-login:                     ## Log in to GitHub Container Registry
+	@echo "Logging in to $(REGISTRY)..."
+	@echo "→ Use a Personal Access Token with 'write:packages' scope"
+	docker login $(REGISTRY) -u $(USERNAME)
+
+docker-build:                     ## Build the Docker image locally
+	docker build -t $(FULL_IMAGE) .
+
+docker-push: docker-build         ## Build & push to GHCR
+	docker push $(FULL_IMAGE)
+
+docker-release: docker-login docker-push   ## Login + build + push
