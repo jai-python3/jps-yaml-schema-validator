@@ -16,7 +16,7 @@ file is declarative and supports:
 * Numeric ranges and list element constraints.
 * Aggregated error reporting without failing fast.
 """
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 from __future__ import annotations
 
 from .exceptions import SchemaValidationError, ValidationIssue

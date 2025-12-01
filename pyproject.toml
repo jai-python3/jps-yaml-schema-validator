@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jps-yaml-schema-validator"
-version = "1.0.1"
+version = "1.0.2"
 description = "A flexible validator that uses YAML rule files to validate user configuration files with type constraints and semantic checks."
 readme = "README.md"
 authors = [{ name = "Jaideep Sundaram", email = "jai.python3@gmail.com" }]
@@ -210,7 +210,7 @@ commit_parser = "conventional"
 # bump-my-version for manual version bumps
 # -----------------------------------------------------------
 [tool.bumpversion]
-current_version = "1.0.1"   # optional but nice to have in one place
+current_version = "1.0.2"   # optional but nice to have in one place
 commit = true
 tag = true
 tag_name = "v{new_version}"
