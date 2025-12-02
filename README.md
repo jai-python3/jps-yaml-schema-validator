@@ -163,5 +163,46 @@ make test
 make test
 ```
 
+## Docker Usage
+
+You can run the validator without installing Python using the official Docker image published on GitHub Container Registry.
+
+### Run directly with Docker
+
+```bash
+docker run --rm -v "$(pwd)":/data ghcr.io/jai-python3/jps-yaml-schema-validator:latest \
+    validate --schema /data/rules.yaml --config /data/config.yaml
+```
+One-line native CLI installation (recommended)
+Get a real command-line experience (jps-yaml-schema-validate) with zero Python dependencies:
+```bash
+curl -sSL https://raw.githubusercontent.com/jai-python3/jps-yaml-schema-validator/main/jps_yaml_schema_validator.sh \
+  | sudo tee /usr/local/bin/jps-yaml-schema-validate > /dev/null \
+  && sudo chmod +x /usr/local/bin/jps-yaml-schema-validate
+```
+
+After installation you can simply run:
+```bash
+jps-yaml-schema-validate validate --schema rules.yaml --config config.yaml
+jps-yaml-schema-validate --help
+```
+
+The wrapper automatically uses the latest Docker image and keeps it up-to-date.
+
+Optional short alias
+
+```bash
+sudo ln -sf /usr/local/bin/jps-yaml-schema-validate /usr/local/bin/jps-validate
+```
+
+Development & Docker maintenance
+
+```bash
+# Build and push the image locally (requires docker login to GHCR first)
+make docker-release
+```
+
+New versions are automatically built and published to GHCR whenever a git tag vX.Y.Z is pushed.
+
 ## 📜 License
 MIT License © Jaideep Sundaram
